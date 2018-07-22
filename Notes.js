@@ -1,7 +1,6 @@
-console.log('Starting Notes!');
 
 const fs = require('fs');
-
+//Internal function, retrieves notes from text file.
 var fetchNotes = () => {
   try {
     var notesString = fs.readFileSync('notes-data.json');
@@ -15,7 +14,7 @@ var saveNotes = (notes) =>{
   fs.writeFileSync('notes-data.json', JSON.stringify(notes));
     // file saving to , content being written to the file.
 }
-
+//function for add command
 var addNote = (title, body) => {
   var notes = fetchNotes();
   var note = {
@@ -31,26 +30,26 @@ var addNote = (title, body) => {
     return note;
   }
 }
-
+//fuction for list command
 var getAll = () => {
   console.log("Fetching all notes");
+  return fetchNotes();
 }
-
+//function for read command
 var getNote = (title) => {
   console.log("Fetching note");
   notes = fetchNotes();
   var requestedNote = notes.filter((note) => note.title === title);
   return requestedNote[0];
 }
-
+//function for remove command
 var removeNote = (title) => {
-  // console.log("Removing Note");
   var rawNotes = fetchNotes();
   notes = rawNotes.filter((note)=>note.title !== title);
   saveNotes(notes);
   return notes.length !== rawNotes.length;
 }
-
+//Prints specified note
 var logNote = (note) => {
   console.log("'-----'");
   console.log(note.title);
@@ -58,11 +57,6 @@ var logNote = (note) => {
   console.log();
 }
 
-
-// module.exports.addNote = () => {
-//   console.log('Add Notes');
-//   return "New Note";
-// }
 
 module.exports = {
   addNote,

@@ -1,4 +1,3 @@
-console.log('Starting app');
 
 const fs = require('fs');
 const os = require('os');
@@ -9,12 +8,33 @@ const yargs = require('yargs');
 const notes = require('./Notes.js');
 
 var user = os.userInfo();
-//var res = notes.addNote();
 
-const argv = yargs.argv;
+const titleOptions = {
+  describe: 'Title of Note',
+  demand: true,
+  alias: 't'
+};
+const bodyOptions = {
+  describe: 'Body of Note' ,
+  demand: true,
+  alias: 'b'
+};
+
+const argv = yargs
+.command('add', 'Add a new note', {
+  title: titleOptions,
+  body: bodyOptions
+})
+.command('list', 'List all notes')
+.command('read', 'Read a note.', {
+  title: titleOptions
+})
+.command("remove", "Removes a Note", {
+  title: titleOptions
+})
+.help()
+.argv;
 var command = argv._[0];
-//console.log('process argv ', process.argv);
-//console.log('yargs argv ', argv);
 
 if("add" === command){
   var note = notes.addNote(argv.title, argv.body);
@@ -27,7 +47,9 @@ if("add" === command){
   }
 }
 else if ("list" === command) {
-  notes.getAll();
+  var allNotes = notes.getAll();
+  console.log('Printing ',  allNotes.length, ' notes(s).');
+  allNotes.forEach((note)=> notes.logNote(note));
 }
 else if ("read" === command) {
   var note = notes.getNote(argv.title);
@@ -46,10 +68,3 @@ else if ("remove" === command ){
 else{
   console.log("Command not recognized.");
 }
-
-
-// fs.appendFile('greetings.txt', 'Hello World!'+ '\n' + '- '+ user.username , function (err){
-//   if(err){
-//     console.log('Error!');
-//   }
-// });
